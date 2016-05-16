@@ -1,4 +1,14 @@
 {
-    "name": "kaba-cli",
-    "version": "0.0.1-alpha.1"
+  "name": "kaba-cli",
+  "version": "0.0.1-alpha.1",
+  "bin": {
+    "kaba": "bin/kaba.js"
+  },
+  "dependencies": {
+    "chalk": "^1.1.3",
+    "liftoff": "^2.2.1",
+    "minimist": "^1.2.0",
+    "pretty-time": "^0.2.0",
+    "tildify": "^1.2.0"
+  }
 }
