@@ -1,14 +1,21 @@
 {
-  "name": "kaba-cli",
-  "version": "1.0.1",
-  "bin": {
-    "kaba": "bin/kaba.js"
-  },
-  "dependencies": {
-    "chalk": "^1.1.3",
-    "liftoff": "^2.2.1",
-    "minimist": "^1.2.0",
-    "pretty-time": "^0.2.0",
-    "tildify": "^1.2.0"
-  }
+    "name": "kaba-cli",
+    "version": "1.0.2",
+    "description": "CLI runner for kaba",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Becklyn/kaba-cli.git"
+    },
+    "homepage": "https://github.com/Becklyn/kaba-cli",
+    "license": "BSD-3-Clause",
+    "bin": {
+        "kaba": "bin/kaba.js"
+    },
+    "dependencies": {
+        "chalk": "^1.1.3",
+        "liftoff": "^2.2.1",
+        "minimist": "^1.2.0",
+        "pretty-time": "^0.2.0",
+        "tildify": "^1.2.0"
+    }
 }
