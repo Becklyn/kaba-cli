@@ -60,7 +60,6 @@ module.exports = function (env, argv)
     // run kabafile
     require(env.configPath);
 
-
     if (!argv._.length)
     {
         printUsage(kaba, "No task selected");
