@@ -62,28 +62,36 @@ module.exports = function (env, argv)
     // run kabafile
     require(env.configPath);
 
-    if (!argv._.length)
+    // get selected task name
+    let selectedTaskName;
+    switch (argv._.length)
     {
-        printUsage(kaba, "No task selected");
-    }
-    else if (1 === argv._.length)
-    {
-        var selectedTask = kaba.task(argv._[0]);
+        // if no task name is given, use the default task name
+        case 0:
+            selectedTaskName = kaba.DEFAULT_TASK_NAME;
+            break;
 
-        if (!selectedTask)
-        {
-            printUsage(kaba, "The task " + chalk.yellow(argv._[0]) + " is not registered.");
-        }
-        else
-        {
-            let debug = !!argv.debug || !!argv.dev;
-            var noop = function () {};
-            selectedTask(noop, debug);
-        }
+        case 1:
+            selectedTaskName = argv._[0];
+            break;
+
+        // if more than one task is given: abort
+        default:
+            printUsage(kaba, "Please select a single task.");
+            return;
+    }
+
+    let selectedTask = kaba.task(selectedTaskName);
+
+    if (!selectedTask)
+    {
+        printUsage(kaba, "The task " + chalk.yellow(argv._[0]) + " is not registered.");
     }
     else
     {
-        printUsage(kaba, "Please select a single task.");
+        let debug = !!argv.debug || !!argv.dev;
+        var noop = function () {};
+        selectedTask(noop, debug);
     }
 };
 
@@ -120,14 +128,19 @@ function printUsage (kaba, message = null)
     kaba.listTasks().forEach(
         function (taskName)
         {
-            console.log("    - " + chalk.yellow(taskName));
+            let formattedTaskName = (kaba.DEFAULT_TASK_NAME === taskName) ?
+                chalk.yellow.bold("default task") + " (run without parameter)" :
+                chalk.yellow(taskName);
+            console.log(`    - ${formattedTaskName}`);
         }
     );
 
     console.log("");
+
     if (message)
     {
         console.log(chalk.red(message));
     }
+
     console.log("Please run a task with: " + chalk.cyan("kaba task"));
 }
