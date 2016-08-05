@@ -3,6 +3,7 @@
 const chalk = require("chalk");
 const tildify = require("tildify");
 const prettyTime = require("pretty-time");
+const path = require("path");
 
 
 var timers = {};
@@ -38,7 +39,8 @@ module.exports = function (env, argv)
         process.exit(1);
     }
 
-    console.log(chalk.blue("Using kabafile: ") + tildify(env.configPath));
+    // print path to the used kaba file
+    printUsedKabaFile(env);
     console.log("");
 
     // set current dir to the dir of the kabafile
@@ -84,6 +86,25 @@ module.exports = function (env, argv)
         printUsage(kaba, "Please select a single task.");
     }
 };
+
+
+/**
+ * Prints the path to the used kaba file
+ *
+ * @param {LiftoffEnvironment} env
+ */
+function printUsedKabaFile (env)
+{
+    let kabaFilePath = path.relative(process.cwd(), env.configPath);
+
+    // if it is a relative path in one of the parent directories
+    if (0 === kabaFilePath.indexOf(".."))
+    {
+        kabaFilePath = tildify(env.configPath);
+    }
+
+    console.log(chalk.blue("Using kabafile: ") + kabaFilePath);
+}
 
 
 /**
