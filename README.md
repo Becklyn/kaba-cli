@@ -37,7 +37,7 @@ $ kaba taskname --debug
 
 ### Config Discovery
 
-If you run kaba in a directory without `kabafile.js`, the runner automatically looks in all parent directories if there is a kabafile. If there is one, the first one is executed. See the docs of [Liftoff] for details. 
+If you run kaba in a directory without `kabafile.js`, the runner automatically traverses through the parent directories looking for a kabafile. If it finds one it will be used and executed. See the docs of [Liftoff] for details.
 
 
 [kaba]: https://www.npmjs.com/package/kaba
