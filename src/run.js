@@ -89,7 +89,7 @@ module.exports = function (env, argv)
     }
     else
     {
-        let debug = !!argv.debug || !!argv.dev;
+        let debug = !!argv.debug || !!argv.dev || !!argv.d;
         var noop = function () {};
         selectedTask(noop, debug);
     }
