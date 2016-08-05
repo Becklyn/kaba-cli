@@ -1,6 +1,6 @@
 {
     "name": "kaba-cli",
-    "version": "1.0.2",
+    "version": "1.1.0",
     "description": "CLI runner for kaba",
     "repository": {
         "type": "git",
