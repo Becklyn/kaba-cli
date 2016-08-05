@@ -17,7 +17,7 @@ var run = require("../src/run");
 var minimist = require('minimist');
 
 const argv = minimist(process.argv.slice(2), {
-    boolean: ["dev", "debug", "d"]
+    boolean: ["dev", "debug", "d", "v"]
 });
 const Kaba = new Liftoff({
     name: "kaba",

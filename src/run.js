@@ -59,8 +59,25 @@ module.exports = function (env, argv)
         }
     });
 
-    // run kabafile
-    require(env.configPath);
+
+    try
+    {
+        // run kabafile
+        require(env.configPath);
+    }
+    catch (e)
+    {
+        let message = e instanceof Error ? e.message : e;
+        printUsage(kaba, `The loaded kaba file has thrown an error: ${message}`);
+
+        // rethrow error, if verbose mode is set
+        if (argv.v)
+        {
+            throw e;
+        }
+
+        return;
+    }
 
     // get selected task name
     let selectedTaskName;
@@ -89,9 +106,22 @@ module.exports = function (env, argv)
     }
     else
     {
-        let debug = !!argv.debug || !!argv.dev || !!argv.d;
-        var noop = function () {};
-        selectedTask(noop, debug);
+        try
+        {
+            let debug = !!argv.debug || !!argv.dev || !!argv.d;
+            var noop = () => {};
+            selectedTask(noop, debug);
+        }
+        catch (e)
+        {
+            let message = e instanceof Error ? e.message : e;
+            console.log(chalk.red(`The task has thrown an error: ${message}`));
+
+            if (argv.v)
+            {
+                throw e;
+            }
+        }
     }
 };
 
