@@ -16,6 +16,9 @@ var timers = {};
  */
 module.exports = function (env, argv)
 {
+    const VERBOSE = argv.v;
+    const DEBUG = !!argv.debug || !!argv.dev || !!argv.d;
+
     console.log("");
     console.log("  " + chalk.black(chalk.bgYellow("  ~~~~~~  ")));
     console.log("  " + chalk.black(chalk.bgYellow("   kaba   ")));
@@ -71,7 +74,7 @@ module.exports = function (env, argv)
         printUsage(kaba, `The loaded kaba file has thrown an error: ${message}`);
 
         // rethrow error, if verbose mode is set
-        if (argv.v)
+        if (VERBOSE)
         {
             throw e;
         }
@@ -108,16 +111,15 @@ module.exports = function (env, argv)
     {
         try
         {
-            let debug = !!argv.debug || !!argv.dev || !!argv.d;
             var noop = () => {};
-            selectedTask(noop, debug);
+            selectedTask(noop, DEBUG);
         }
         catch (e)
         {
             let message = e instanceof Error ? e.message : e;
             console.log(chalk.red(`The task has thrown an error: ${message}`));
 
-            if (argv.v)
+            if (VERBOSE)
             {
                 throw e;
             }
