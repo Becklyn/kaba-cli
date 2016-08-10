@@ -105,7 +105,14 @@ module.exports = function (env, argv)
 
     if (!selectedTask)
     {
-        printUsage(kaba, "The task " + chalk.yellow(argv._[0]) + " is not registered.");
+        if (kaba.DEFAULT_TASK_NAME !== selectedTaskName)
+        {
+            printUsage(kaba, "The task " + chalk.yellow(selectedTaskName) + " is not registered.");
+        }
+        else
+        {
+            printUsage(kaba, "No default task registered.");
+        }
     }
     else
     {
