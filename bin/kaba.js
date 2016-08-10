@@ -12,9 +12,9 @@
  *  modulePackage: *,
  * }} LiftoffEnvironment
  */
-var Liftoff = require("liftoff");
-var run = require("../src/run");
-var minimist = require('minimist');
+const Liftoff = require("liftoff");
+const run = require("../src/run");
+const minimist = require('minimist');
 
 const argv = minimist(process.argv.slice(2), {
     boolean: ["dev", "debug", "d", "v"]
