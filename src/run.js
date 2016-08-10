@@ -162,17 +162,26 @@ function printUsedKabaFile (env)
  */
 function printUsage (kaba, message = null)
 {
-    console.log("Registered tasks:");
+    const tasks = kaba ? kaba.listTasks() : [];
 
-    kaba.listTasks().forEach(
-        function (taskName)
-        {
-            let formattedTaskName = (kaba.DEFAULT_TASK_NAME === taskName) ?
-                chalk.yellow.bold("default task") + " (run without parameter)" :
-                chalk.yellow(taskName);
-            console.log(`    - ${formattedTaskName}`);
-        }
-    );
+    if (tasks.length)
+    {
+        console.log("Registered tasks:");
+
+        tasks.forEach(
+            function (taskName)
+            {
+                let formattedTaskName = (kaba.DEFAULT_TASK_NAME === taskName) ?
+                    chalk.yellow.bold("default task") + " (run without parameter)" :
+                    chalk.yellow(taskName);
+                console.log(`    - ${formattedTaskName}`);
+            }
+        );
+    }
+    else
+    {
+        console.log("No tasks defined");
+    }
 
     console.log("");
 
