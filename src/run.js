@@ -57,7 +57,11 @@ module.exports = function (env, argv)
         if (timers[taskDetails.id])
         {
             let diff = process.hrtime(timers[taskDetails.id]);
-            console.log("Task " + chalk.yellow(taskDetails.task) + " finished after " + chalk.blue(prettyTime(diff)));
+            let taskName = (taskDetails.task === kaba.DEFAULT_TASK_NAME)
+                ? chalk.yellow.bold("Default task")
+                : `Task ${chalk.yellow(taskDetails.task)}`;
+
+            console.log(`${taskName} finished after ${chalk.blue(prettyTime(diff))}`);
             delete timers[taskDetails.id];
         }
     });
