@@ -1,36 +1,22 @@
 #!/usr/bin/env node
 
 /**
+ * @typedef {{
+ *  debug: boolean,
+ *  watch: boolean,
+ *  lint: boolean,
+ *  verbose: boolean,
+ * }} KabaAppEnvironment
  *
  * @typedef {{
- *  cwd: string,
- *  require: Array,
- *  configNameSearch: string[],
- *  configPath: string,
- *  configBase: string,
+ *  runnerPath: string,
  *  modulePath: string,
- *  modulePackage: *,
- * }} LiftoffEnvironment
+ *  verbose: boolean,
+ *  app: KabaAppEnvironment,
+ *  arguments: string[],
+ * }} KabaEnvironment
  */
-const Liftoff = require("liftoff");
 const run = require("../src/run");
-const minimist = require('minimist');
+const environment = require("../src/environment");
 
-const argv = minimist(process.argv.slice(2), {
-    boolean: ["dev", "debug", "d", "v"]
-});
-const Kaba = new Liftoff({
-    name: "kaba",
-    extensions: {
-        ".js": null
-    },
-    v8flags: ['--harmony']
-});
-
-
-Kaba.launch({
-    cwd: argv.cwd,
-    configPath: argv.kabafile,
-    require: argv.require,
-    completion: argv.completion
-}, (env) => run(env, argv));
+run(environment);

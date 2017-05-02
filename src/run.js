@@ -1,84 +1,73 @@
-"use strict";
-
 const chalk = require("chalk");
-const tildify = require("tildify");
 const prettyTime = require("pretty-time");
-const path = require("path");
-
-
-var timers = {};
+const timers = {};
 
 
 /**
- *
- * @param {LiftoffEnvironment} env
- * @param argv
+ * @param {KabaEnvironment} env
  */
-module.exports = function (env, argv)
+module.exports = function (env)
 {
-    const VERBOSE = argv.v;
-    const DEBUG = !!argv.debug || !!argv.dev || !!argv.d;
+    console.log(``);
+    console.log(`  ${chalk.black(chalk.bgYellow("  ~~~~~~  "))}`);
+    console.log(`  ${chalk.black(chalk.bgYellow("   kaba   "))}`);
+    console.log(`  ${chalk.black(chalk.bgYellow("  ~~~~~~  "))}`);
+    console.log(``);
+    console.log(``);
 
-    console.log("");
-    console.log("  " + chalk.black(chalk.bgYellow("  ~~~~~~  ")));
-    console.log("  " + chalk.black(chalk.bgYellow("   kaba   ")));
-    console.log("  " + chalk.black(chalk.bgYellow("  ~~~~~~  ")));
-    console.log("");
+    /** @type {Kaba} kaba */
+    let kaba;
 
-    // check for local kaba installation
-    if (!env.modulePath)
+    try
+    {
+        // get kaba instance
+        kaba = require(env.modulePath);
+
+        kaba.on("start", (taskDetails) => timers[taskDetails.id] = process.hrtime());
+        kaba.on("end", (taskDetails) =>
+        {
+            if (timers[taskDetails.id])
+            {
+                let diff = process.hrtime(timers[taskDetails.id]);
+                let taskName = (taskDetails.task === kaba.DEFAULT_TASK_NAME)
+                    ? chalk.yellow.bold("Default task")
+                    : `Task ${chalk.yellow(taskDetails.task)}`;
+
+                console.log(`${taskName} finished after ${chalk.blue(prettyTime(diff))}`);
+                timers[taskDetails.id] = null;
+            }
+        });
+    }
+    catch (e)
     {
         console.log(
-            chalk.red("Local kaba not found in "),
-            tildify(env.cwd)
+            chalk.red(`Local kaba module not found.`)
         );
         process.exit(1);
     }
 
-    // if no config file, return with an error
-    if (!env.configPath)
-    {
-        console.log(chalk.red("No kabafile found."));
-        process.exit(1);
-    }
-
-    // print path to the used kaba file
-    printUsedKabaFile(env);
-    console.log("");
-
-    // set current dir to the dir of the kabafile
-    process.chdir(env.cwd);
-
-    // get kaba instance
-    let kaba = require(env.modulePath);
-
-    kaba.on("start", (taskDetails) => timers[taskDetails.id] = process.hrtime());
-    kaba.on("end", (taskDetails) => {
-        if (timers[taskDetails.id])
-        {
-            let diff = process.hrtime(timers[taskDetails.id]);
-            let taskName = (taskDetails.task === kaba.DEFAULT_TASK_NAME)
-                ? chalk.yellow.bold("Default task")
-                : `Task ${chalk.yellow(taskDetails.task)}`;
-
-            console.log(`${taskName} finished after ${chalk.blue(prettyTime(diff))}`);
-            delete timers[taskDetails.id];
-        }
-    });
-
-
     try
     {
         // run kabafile
-        require(env.configPath);
+        require(env.runnerPath);
     }
     catch (e)
     {
         let message = e instanceof Error ? e.message : e;
-        printUsage(kaba, `The loaded kaba file has thrown an error: ${message}`);
+
+        if (0 === message.indexOf("Cannot find module"))
+        {
+            message = `No kabafile found.`;
+        }
+        else
+        {
+            message = `The loaded kaba file has thrown an error: ${message}`;
+        }
+
+        printUsage(kaba, message);
 
         // rethrow error, if verbose mode is set
-        if (VERBOSE)
+        if (env.verbose)
         {
             throw e;
         }
@@ -88,7 +77,7 @@ module.exports = function (env, argv)
 
     // get selected task name
     let selectedTaskName;
-    switch (argv._.length)
+    switch (env.arguments.length)
     {
         // if no task name is given, use the default task name
         case 0:
@@ -96,12 +85,12 @@ module.exports = function (env, argv)
             break;
 
         case 1:
-            selectedTaskName = argv._[0];
+            selectedTaskName = env.arguments[0];
             break;
 
         // if more than one task is given: abort
         default:
-            printUsage(kaba, "Please select a single task.");
+            printUsage(kaba, `Please select a single task.`);
             return;
     }
 
@@ -109,53 +98,31 @@ module.exports = function (env, argv)
 
     if (!selectedTask)
     {
-        if (kaba.DEFAULT_TASK_NAME !== selectedTaskName)
-        {
-            printUsage(kaba, "The task " + chalk.yellow(selectedTaskName) + " is not registered.");
-        }
-        else
-        {
-            printUsage(kaba, "No default task registered.");
-        }
+        const message = kaba.DEFAULT_TASK_NAME !== selectedTaskName
+            ? `The task ${chalk.yellow(selectedTaskName)} is not registered.`
+            : `No default task registered.`;
+
+        printUsage(kaba, message);
     }
     else
     {
         try
         {
             var noop = () => {};
-            selectedTask(noop, DEBUG);
+            selectedTask(noop, false);
         }
         catch (e)
         {
             let message = e instanceof Error ? e.message : e;
             console.log(chalk.red(`The task has thrown an error: ${message}`));
 
-            if (VERBOSE)
+            if (env.verbose)
             {
                 throw e;
             }
         }
     }
 };
-
-
-/**
- * Prints the path to the used kaba file
- *
- * @param {LiftoffEnvironment} env
- */
-function printUsedKabaFile (env)
-{
-    let kabaFilePath = path.relative(process.cwd(), env.configPath);
-
-    // if it is a relative path in one of the parent directories
-    if (0 === kabaFilePath.indexOf(".."))
-    {
-        kabaFilePath = tildify(env.configPath);
-    }
-
-    console.log(chalk.blue("Using kabafile: ") + kabaFilePath);
-}
 
 
 /**
@@ -170,29 +137,31 @@ function printUsage (kaba, message = null)
 
     if (tasks.length)
     {
-        console.log("Registered tasks:");
+        console.log(`Registered tasks:`);
 
         tasks.forEach(
             function (taskName)
             {
-                let formattedTaskName = (kaba.DEFAULT_TASK_NAME === taskName) ?
-                    chalk.yellow.bold("default task") + " (run without parameter)" :
-                    chalk.yellow(taskName);
+                let formattedTaskName = (kaba.DEFAULT_TASK_NAME === taskName)
+                    ? `${chalk.yellow.bold("default task")}  (run without parameter)`
+                    : chalk.yellow(taskName);
+
                 console.log(`    - ${formattedTaskName}`);
             }
         );
     }
     else
     {
-        console.log("No tasks defined");
+        console.log(`No tasks defined.`);
     }
 
-    console.log("");
+    console.log(``);
 
     if (message)
     {
         console.log(chalk.red(message));
+        console.log(``);
     }
 
-    console.log("Please run a task with: " + chalk.cyan("kaba task"));
+    console.log(`Please run a task with: ${chalk.cyan("kaba task")}`);
 }
