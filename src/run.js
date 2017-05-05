@@ -100,7 +100,8 @@ module.exports = function (env)
     {
         try
         {
-            if (kaba.version)
+            // no specific version check yet, as just the check for the property is check enough
+            if (typeof kaba.version !== "undefined")
             {
                 // new version
                 selectedTask(() => {}, env.app);
