@@ -96,20 +96,22 @@ module.exports = function (env)
 
     let selectedTask = kaba.task(selectedTaskName);
 
-    if (!selectedTask)
-    {
-        const message = kaba.DEFAULT_TASK_NAME !== selectedTaskName
-            ? `The task ${chalk.yellow(selectedTaskName)} is not registered.`
-            : `No default task registered.`;
-
-        printUsage(kaba, message);
-    }
-    else
+    if (selectedTask)
     {
         try
         {
-            var noop = () => {};
-            selectedTask(noop, false);
+            if (kaba.version)
+            {
+                // new version
+                selectedTask(() => {}, env.app);
+            }
+            else
+            {
+                // legacy version, doesn't yet have a version property
+                // @deprecated
+                selectedTask(() => {}, env.app.debug);
+            }
+
         }
         catch (e)
         {
@@ -121,6 +123,14 @@ module.exports = function (env)
                 throw e;
             }
         }
+    }
+    else
+    {
+        const message = kaba.DEFAULT_TASK_NAME !== selectedTaskName
+            ? `The task ${chalk.yellow(selectedTaskName)} is not registered.`
+            : `No default task registered.`;
+
+        printUsage(kaba, message);
     }
 };
 
