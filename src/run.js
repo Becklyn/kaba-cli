@@ -75,6 +75,12 @@ module.exports = function (env)
         return;
     }
 
+    if (kaba.version)
+    {
+        console.log(`Local kaba version: ${chalk.yellow(kaba.version)}`);
+        console.log(``);
+    }
+
     // get selected task name
     let selectedTaskName;
     switch (env.arguments.length)
