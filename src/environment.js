@@ -33,5 +33,6 @@ function getAppEnvironment (argv)
         lint: argv.lint || debug,
         watch: debug,
         verbose: argv.v,
+        compile: !argv.lint,
     };
 }
