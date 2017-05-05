@@ -100,7 +100,7 @@ module.exports = function (env)
             return;
     }
 
-    let selectedTask = kaba.task(selectedTaskName);
+    let selectedTask = kaba.get(selectedTaskName);
 
     if (selectedTask)
     {
