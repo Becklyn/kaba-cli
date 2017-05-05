@@ -40,9 +40,20 @@ module.exports = function (env)
     }
     catch (e)
     {
-        console.log(
-            chalk.red(`Local kaba module not found.`)
-        );
+        let message = e.message;
+
+        if (0 === message.indexOf("Cannot find module"))
+        {
+            message = `Local kaba module not found.`;
+        }
+        console.log(chalk.red(message));
+
+        // rethrow error, if verbose mode is set
+        if (env.verbose)
+        {
+            throw e;
+        }
+
         process.exit(1);
     }
 
