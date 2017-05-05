@@ -23,20 +23,34 @@ module.exports = function (env)
         // get kaba instance
         kaba = require(env.modulePath);
 
-        kaba.on("start", (taskDetails) => timers[taskDetails.id] = process.hrtime());
-        kaba.on("end", (taskDetails) =>
-        {
-            if (timers[taskDetails.id])
-            {
-                let diff = process.hrtime(timers[taskDetails.id]);
+        kaba.on(
+            "start",
+            (taskDetails) => {
+                timers[taskDetails.id] = process.hrtime();
                 let taskName = (taskDetails.task === kaba.DEFAULT_TASK_NAME)
                     ? chalk.yellow.bold("Default task")
                     : `Task ${chalk.yellow(taskDetails.task)}`;
 
-                console.log(`${taskName} finished after ${chalk.blue(prettyTime(diff))}`);
-                timers[taskDetails.id] = null;
+                console.log(`${taskName} started`);
             }
-        });
+        );
+
+        kaba.on(
+            "end",
+            (taskDetails) =>
+            {
+                if (timers[taskDetails.id])
+                {
+                    let diff = process.hrtime(timers[taskDetails.id]);
+                    let taskName = (taskDetails.task === kaba.DEFAULT_TASK_NAME)
+                        ? chalk.green.bold("Default task")
+                        : `Task ${chalk.green(taskDetails.task)}`;
+
+                    console.log(`${taskName} finished after ${chalk.blue(prettyTime(diff))}`);
+                    timers[taskDetails.id] = null;
+                }
+            }
+        );
     }
     catch (e)
     {
