@@ -3,7 +3,8 @@ const minimist = require('minimist');
 
 // prepare CLI arguments
 const argv = minimist(process.argv.slice(2), {
-    boolean: ["dev", "debug", "d", "v", "lint"]
+    boolean: ["dev", "debug", "d", "v", "lint"],
+    string: ["init"],
 });
 
 const cwd = process.cwd();
@@ -14,6 +15,7 @@ module.exports = {
     app: getAppEnvironment(argv),
     verbose: argv.v,
     arguments: argv._,
+    init: argv.init || null,
 };
 
 

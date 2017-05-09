@@ -71,6 +71,31 @@ module.exports = function (env)
         process.exit(1);
     }
 
+    // Print kaba version
+    if (kaba.version)
+    {
+        console.log(`Local kaba version: ${chalk.yellow(kaba.version)}`);
+        console.log(``);
+    }
+
+    // check whether a init request was done
+    if (null !== env.init)
+    {
+        const initializationResult = kaba.initProject(env.init);
+
+        if (true !== initializationResult)
+        {
+            printInitUsage(kaba, `Error while initializing project: ${initializationResult}`);
+        }
+        else
+        {
+            console.log(chalk.green(`The kabafile was created.`));
+        }
+
+        return;
+    }
+
+    // load kabafile
     try
     {
         // run kabafile
@@ -80,7 +105,7 @@ module.exports = function (env)
     {
         let message = e instanceof Error ? e.message : e;
 
-        if (0 === message.indexOf("Cannot find module"))
+        if (0 === message.indexOf(`Cannot find module '${env.runnerPath}'`))
         {
             message = `No kabafile found.`;
         }
@@ -98,12 +123,6 @@ module.exports = function (env)
         }
 
         return;
-    }
-
-    if (kaba.version)
-    {
-        console.log(`Local kaba version: ${chalk.yellow(kaba.version)}`);
-        console.log(``);
     }
 
     // get selected task name
@@ -206,4 +225,52 @@ function printUsage (kaba, message = null)
     }
 
     console.log(`Please run a task with: ${chalk.cyan("kaba task")}`);
+
+    const initFiles = kaba.getAllInitIdentifiers();
+
+    if (0 !== initFiles.length)
+    {
+        console.log(``);
+        console.log(`You can also initialize a local kaba project by using one of the predefined init files:`);
+
+        initFiles.forEach(
+            (id) => console.log(`    - ${chalk.yellow(id)}`)
+        );
+
+        console.log(``);
+        console.log(`Initialize a kaba project with: ${chalk.cyan(`kaba --init=${chalk.underline("file")}`)}`);
+    }
+}
+
+
+/**
+ * Prints the init usage information with an additional, optional error message
+ *
+ * @param {Kaba} kaba
+ * @param {string|null} message
+ */
+function printInitUsage (kaba, message = null)
+{
+    console.log(``);
+
+    if (message)
+    {
+        console.log(chalk.red(message));
+        console.log(``);
+    }
+
+    const initFiles = kaba.getAllInitIdentifiers();
+
+    if (0 !== initFiles.length)
+    {
+        console.log(``);
+        console.log(`You can initialize a local kaba project by using one of the predefined init files:`);
+
+        initFiles.forEach(
+            (id) => console.log(`    - ${chalk.yellow(id)}`)
+        );
+
+        console.log(``);
+        console.log(`Initialize a kaba project with: ${chalk.cyan(`kaba --init=${chalk.underline("file")}`)}`);
+    }
 }

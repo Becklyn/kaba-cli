@@ -15,6 +15,7 @@
  *  verbose: boolean,
  *  app: KabaAppEnvironment,
  *  arguments: string[],
+ *  init: ?string,
  * }} KabaEnvironment
  */
 const run = require("../src/run");
