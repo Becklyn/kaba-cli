@@ -72,14 +72,14 @@ module.exports = function (env)
     }
 
     // Print kaba version
-    if (kaba.version)
+    if (typeof kaba.version !== "undefined")
     {
         console.log(`Local kaba version: ${chalk.yellow(kaba.version)}`);
         console.log(``);
     }
 
     // check whether a init request was done
-    if (null !== env.init)
+    if (null !== env.init && typeof kaba.initProject !== "undefined")
     {
         const initializationResult = kaba.initProject(env.init);
 
