@@ -6,7 +6,7 @@
  *  watch: boolean,
  *  lint: boolean,
  *  verbose: boolean,
- *  compile: boolean,
+ *  mode: string,
  * }} KabaAppEnvironment
  *
  * @typedef {{
