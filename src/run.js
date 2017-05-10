@@ -102,6 +102,8 @@ module.exports = class CLIRunner
 
     /**
      * Loads the kaba file
+     *
+     * @private
      */
     loadKabafile ()
     {
@@ -181,6 +183,8 @@ module.exports = class CLIRunner
 
     /**
      * Prints the kaba header
+     *
+     * @private
      */
     printHeader ()
     {
@@ -273,7 +277,9 @@ module.exports = class CLIRunner
 
 
     /**
-     * Runs the given task
+     * Runs the selected task
+     *
+     * @private
      */
     runTask ()
     {
@@ -339,7 +345,9 @@ module.exports = class CLIRunner
 
 
     /**
+     * Prints the version info
      *
+     * @private
      */
     printVersion ()
     {
@@ -353,7 +361,9 @@ module.exports = class CLIRunner
 
 
     /**
-     * Prints the usage with optional error messages
+     * Prints the usage with the global error messages
+     *
+     * @private
      */
     printUsage ()
     {
