@@ -121,7 +121,7 @@ module.exports = class CLIRunner
         catch (e)
         {
             this.hasValidKabafile = false;
-            let message = e instanceof Error ? e.message : e;
+            const message = e instanceof Error ? e.message : e;
 
             if (0 === message.indexOf(`Cannot find module '${this.env.runnerPath}'`))
             {
@@ -302,7 +302,7 @@ module.exports = class CLIRunner
         }
 
 
-        let selectedTask = this.kaba.get(selectedTaskName);
+        const selectedTask = this.kaba.get(selectedTaskName);
 
         if (selectedTask)
         {
@@ -324,7 +324,7 @@ module.exports = class CLIRunner
             }
             catch (e)
             {
-                let message = e instanceof Error ? e.message : e;
+                const message = e instanceof Error ? e.message : e;
                 this.errors.push(`The task has thrown an error: ${message}`);
 
                 if (this.env.verbose)
