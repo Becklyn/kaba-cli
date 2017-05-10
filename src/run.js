@@ -1,8 +1,11 @@
 const chalk = require("chalk");
 const prettyTime = require("pretty-time");
-const timers = {};
 
 
+/**
+ * The main app CLI runner
+ * @type {CLIRunner}
+ */
 module.exports = class CLIRunner
 {
     /**
@@ -95,6 +98,7 @@ module.exports = class CLIRunner
             return null;
         }
     }
+
 
     /**
      * Loads the kaba file
@@ -266,7 +270,6 @@ module.exports = class CLIRunner
             this.errors.push(`Error while initializing project: ${initializationResult}`);
         }
     }
-
 
 
     /**
