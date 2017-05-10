@@ -16,9 +16,12 @@
  *  app: KabaAppEnvironment,
  *  arguments: string[],
  *  init: ?string,
+ *  help: boolean,
+ *  version: boolean,
  * }} KabaEnvironment
  */
-const run = require("../src/run");
+const CLIRunner = require("../src/run");
 const environment = require("../src/environment");
 
-run(environment);
+const runner = new CLIRunner(environment);
+runner.run();
