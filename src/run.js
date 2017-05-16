@@ -115,7 +115,9 @@ module.exports = class CLIRunner
             // load config from local kabafile
             this.hasValidKabafile = true;
             this.registeredTasks = this.kaba.listTasks().sort();
-            this.registeredInitFiles = this.kaba.getAllInitIdentifiers().sort();
+            this.registeredInitFiles = typeof this.kaba.getAllInitIdentifiers === "function"
+                ? this.kaba.getAllInitIdentifiers().sort()
+                : [];
 
         }
         catch (e)
