@@ -200,7 +200,7 @@ module.exports = class CLIRunner
 
         let message = `CLI ${kabaCliVersion}`;
 
-        if (null !== this.kaba)
+        if (null !== this.kaba && typeof this.kaba.version === "string")
         {
             message = `${this.kaba.version} / ${message}`;
         }
