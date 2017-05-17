@@ -30,14 +30,43 @@ module.exports = {
  */
 function getAppEnvironment (argv)
 {
-    const debug = argv.dev || argv.debug || argv.d;
-
-    return {
-        debug: debug,
-        lint: argv.lint || debug,
-        watch: debug,
-        verbose: argv.v,
-        mode: argv.lint ? "lint" : "compile",
+    const env = {
+        debug: false,
+        lint: false,
+        watch: false,
+        verbose: false,
+        mode: "compile",
         cliVersion: null,
     };
+
+    if (argv.d || argv.dev)
+    {
+        env.debug = true;
+        env.lint = true;
+        env.watch = true;
+    }
+
+    if (argv.debug)
+    {
+        env.debug = true;
+    }
+
+    if (argv.v)
+    {
+        env.verbose = true;
+    }
+
+    if (argv.lint)
+    {
+        env.lint = true;
+        env.mode = "lint";
+    }
+
+
+    if (argv.debug)
+    {
+        env.debug = true;
+    }
+
+    return env;
 }
