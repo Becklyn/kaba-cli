@@ -23,8 +23,9 @@ module.exports = {
 
 
 /**
+ * Builds the app environment config
  *
- * @param {{dev: boolean, debug: boolean, d: boolean, v: boolean, validate: boolean, withSourcemaps: boolean}} argv
+ * @param {{dev: boolean, debug: boolean, d: boolean, v: boolean, validate: boolean, "with-sourcemaps": boolean}} argv
  *
  * @return {KabaAppEnvironment}
  */
@@ -37,7 +38,7 @@ function getAppEnvironment (argv)
         verbose: false,
         mode: "compile",
         cliVersion: null,
-        sourceMap: false,
+        sourceMaps: false,
     };
 
     if (argv.d || argv.dev)
@@ -68,7 +69,7 @@ function getAppEnvironment (argv)
         env.debug = true;
     }
 
-    if (argv.withSourcemaps)
+    if (argv["with-sourcemaps"])
     {
         env.sourceMaps = true;
     }
