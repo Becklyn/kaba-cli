@@ -7,6 +7,7 @@
  *  lint: boolean,
  *  verbose: boolean,
  *  mode: string,
+ *  cliVersion: ?string,
  * }} KabaAppEnvironment
  *
  * @typedef {{
@@ -20,7 +21,7 @@
  *  version: boolean,
  * }} KabaEnvironment
  */
-const CLIRunner = require("../src/run");
+const CLIRunner = require("../src/CLIRunner");
 const environment = require("../src/environment");
 
 const runner = new CLIRunner(environment);

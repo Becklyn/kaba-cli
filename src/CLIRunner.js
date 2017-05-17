@@ -52,12 +52,19 @@ module.exports = class CLIRunner
 
         /**
          * @private
+         * @type {string}
+         */
+        this.CLI_VERSION = require(`${__dirname}/../package.json`).version;
+
+        /**
+         * @private
          * @type {?Kaba}
          */
         this.kaba = this.loadKaba();
 
 
         // initialize
+        this.env.app.cliVersion = this.CLI_VERSION;
         this.loadKabafile();
     }
 
@@ -196,9 +203,7 @@ module.exports = class CLIRunner
         console.log(`${chalk.black(chalk.bgYellow("  ~~~~~~~~~  "))}`);
         console.log(``);
 
-        const kabaCliVersion = require(`${__dirname}/../package.json`).version;
-
-        let message = `CLI ${kabaCliVersion}`;
+        let message = `CLI ${this.CLI_VERSION}`;
 
         if (null !== this.kaba && typeof this.kaba.version === "string")
         {
@@ -353,11 +358,10 @@ module.exports = class CLIRunner
      */
     printVersion ()
     {
-        const kabaCliVersion = require(`${__dirname}/../package.json`).version;
         const kabaVersion = null !== this.kaba
             ? this.kaba.version || "unknown"
             : chalk.red("no local kaba found");
-        console.log(`${chalk.yellow(`kaba-cli`)} ${kabaCliVersion}`);
+        console.log(`${chalk.yellow(`kaba-cli`)} ${this.CLI_VERSION}`);
         console.log(`${chalk.yellow(`kaba`)}     ${kabaVersion}`);
     }
 

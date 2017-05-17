@@ -38,5 +38,6 @@ function getAppEnvironment (argv)
         watch: debug,
         verbose: argv.v,
         mode: argv.lint ? "lint" : "compile",
+        cliVersion: null,
     };
 }
