@@ -8,6 +8,7 @@
  *  verbose: boolean,
  *  mode: string,
  *  cliVersion: ?string,
+ *  sourceMaps: boolean,
  * }} KabaAppEnvironment
  *
  * @typedef {{

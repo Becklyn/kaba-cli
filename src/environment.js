@@ -3,7 +3,7 @@ const minimist = require('minimist');
 
 // prepare CLI arguments
 const argv = minimist(process.argv.slice(2), {
-    boolean: ["dev", "debug", "d", "v", "validate", "help", "version"],
+    boolean: ["dev", "debug", "d", "v", "validate", "help", "version", "with-sourcemaps"],
     string: ["init"],
 });
 
@@ -24,7 +24,7 @@ module.exports = {
 
 /**
  *
- * @param {{dev: boolean, debug: boolean, d: boolean, v: boolean, validate: boolean}} argv
+ * @param {{dev: boolean, debug: boolean, d: boolean, v: boolean, validate: boolean, withSourcemaps: boolean}} argv
  *
  * @return {KabaAppEnvironment}
  */
@@ -37,6 +37,7 @@ function getAppEnvironment (argv)
         verbose: false,
         mode: "compile",
         cliVersion: null,
+        sourceMap: false,
     };
 
     if (argv.d || argv.dev)
@@ -62,10 +63,14 @@ function getAppEnvironment (argv)
         env.mode = "validate";
     }
 
-
     if (argv.debug)
     {
         env.debug = true;
+    }
+
+    if (argv.withSourcemaps)
+    {
+        env.sourceMaps = true;
     }
 
     return env;
