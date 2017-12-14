@@ -1,6 +1,11 @@
 kaba-cli
 ========
 
+
+> **This project is deprecated**\
+> Just use the new [`kaba`](https://github.com/Becklyn/kaba) version (v4+), it doesn't need `kaba-cli` anymore.
+
+
 The CLI runner for [kaba].
 
 
